@@ -1,0 +1,638 @@
+{
+    "metadata": {
+        "kernelspec": {
+            "name": "SQL",
+            "display_name": "SQL",
+            "language": "sql"
+        },
+        "language_info": {
+            "name": "sql",
+            "version": ""
+        }
+    },
+    "nbformat_minor": 2,
+    "nbformat": 4,
+    "cells": [
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Goal:** Create a database, fill with historical tree data, and query data.\n",
+                "\n",
+                "**Why:** Downtown Improvement District's project to track trees will benefit from using a relational database to store, collect, and report on the data available.\n",
+                "\n",
+                "**Steps:**\n",
+                "\n",
+                "First, open a program that can connect to a SQL database, such as Azure Data Studio or SQL Server Management Studio. If you're reading this notebook, chances are you already have the program open! Nice job.\n",
+                "\n",
+                "Next, create the database by running the code below. \n",
+                "\n",
+                "_Note:_ When you see a grey box such as the box below that says \"CREATE DATABASE Trees;\", there is code to run. To activate this code, you can either click the \"Run cell\" button in the grey box below, or copy & paste the code into a new query window. The code is embedded here so that we can explain each step along the way."
+            ],
+            "metadata": {
+                "azdata_cell_guid": "b7b32e90-2300-400b-ab04-41c9ae551c2a"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "CREATE DATABASE Trees;"
+            ],
+            "metadata": {
+                "azdata_cell_guid": "c539c54b-d3d1-42fc-aeab-4915c4972688",
+                "language": "sql"
+            },
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "Commands completed successfully."
+                    },
+                    "metadata": {}
+                },
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "Total execution time: 00:00:00.323"
+                    },
+                    "metadata": {}
+                }
+            ],
+            "execution_count": 5
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "Then, create the tables in the database."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "5ce50426-50e4-42ae-b98d-0f13bfab467c"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "USE Trees\r\n",
+                "GO\r\n",
+                "CREATE TABLE [dbo].[TreeKeeper_Staging] (\r\n",
+                "    [Species]                              NVARCHAR (MAX) NULL,\r\n",
+                "    [DBH]                                  FLOAT (53)     NULL,\r\n",
+                "    [Condition for ISA value]              NVARCHAR (MAX) NULL,\r\n",
+                "    [Urban Forestry Maintenance]           NVARCHAR (MAX) NULL,\r\n",
+                "    [Location Type for ISA value]          NVARCHAR (MAX) NULL,\r\n",
+                "    [Planting Width MinAvailableRootSpace] NVARCHAR (MAX) NULL,\r\n",
+                "    [Service Area]                         NVARCHAR (MAX) NULL,\r\n",
+                "    [Neighborhood]                         NVARCHAR (MAX) NULL,\r\n",
+                "    [Park]                                 NVARCHAR (MAX) NULL,\r\n",
+                "    [Primary Wires Overhead]               NVARCHAR (MAX) NULL,\r\n",
+                "    [Lights or Conduit at Tree Site]       NVARCHAR (MAX) NULL,\r\n",
+                "    [Tree Watering Bag]                    NVARCHAR (MAX) NULL,\r\n",
+                "    [Tree Stake]                           NVARCHAR (MAX) NULL,\r\n",
+                "    [Tree Grate]                           NVARCHAR (MAX) NULL,\r\n",
+                "    [Structure Soil Type]                  NVARCHAR (MAX) NULL,\r\n",
+                "    [Treated Tree]                         NVARCHAR (MAX) NULL,\r\n",
+                "    [Research Tree]                        NVARCHAR (MAX) NULL,\r\n",
+                "    [Removal Cause]                        NVARCHAR (MAX) NULL,\r\n",
+                "    [Removal DBH]                          FLOAT (53)     NULL,\r\n",
+                "    [Size]                                 NVARCHAR (MAX) NULL,\r\n",
+                "    [Root]                                 NVARCHAR (MAX) NULL,\r\n",
+                "    [Planting Project]                     NVARCHAR (MAX) NULL,\r\n",
+                "    [Unique Planting Situation]            NVARCHAR (MAX) NULL,\r\n",
+                "    [Stump Grinding]                       NVARCHAR (MAX) NULL,\r\n",
+                "    [Contact Info]                         NVARCHAR (MAX) NULL,\r\n",
+                "    [Stump Size]                           NVARCHAR (MAX) NULL,\r\n",
+                "    [Preservation Project]                 NVARCHAR (MAX) NULL,\r\n",
+                "    [Preservation Type]                    NVARCHAR (MAX) NULL,\r\n",
+                "    [Root Damage]                          NVARCHAR (MAX) NULL,\r\n",
+                "    [Stem Damage]                          NVARCHAR (MAX) NULL,\r\n",
+                "    [Canopy Damage]                        NVARCHAR (MAX) NULL,\r\n",
+                "    [Damage Extent]                        NVARCHAR (MAX) NULL,\r\n",
+                "    [Underground Utility Conflict]         NVARCHAR (MAX) NULL,\r\n",
+                "    [Tree Inspector Area]                  NVARCHAR (MAX) NULL,\r\n",
+                "    [Maintenance Task]                     NVARCHAR (MAX) NULL,\r\n",
+                "    [Tree Planted Date]                    NVARCHAR (MAX) NULL,\r\n",
+                "    [Address]                              NVARCHAR (MAX) NULL,\r\n",
+                "    [On Street]                            NVARCHAR (MAX) NULL,\r\n",
+                "    [From Street]                          NVARCHAR (MAX) NULL,\r\n",
+                "    [To Street]                            NVARCHAR (MAX) NULL,\r\n",
+                "    [X-Coord]                              FLOAT (53)     NULL,\r\n",
+                "    [Y-Coord]                              FLOAT (53)     NULL,\r\n",
+                "    [Inventory Date]                       NVARCHAR (MAX) NULL,\r\n",
+                "    [Change Date]                          DATE           NULL,\r\n",
+                "    [Comment]                              NVARCHAR (MAX) NULL,\r\n",
+                "    [Site ID]                              INT            NOT NULL\r\n",
+                ");\r\n",
+                "\r\n",
+                ""
+            ],
+            "metadata": {
+                "azdata_cell_guid": "59144f67-c9aa-4011-977b-f0abe3bfc03f",
+                "language": "sql"
+            },
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "Commands completed successfully."
+                    },
+                    "metadata": {}
+                },
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "Commands completed successfully."
+                    },
+                    "metadata": {}
+                },
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "Total execution time: 00:00:00.010"
+                    },
+                    "metadata": {}
+                }
+            ],
+            "execution_count": 3
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "The above code creates three tables:\n",
+                "\n",
+                "1. **TreeKeeper\\_staging:** This table is for the staging of data from TreeKeeper's source data. The columns' datatypes are generally not restrictive (i.e. a date column like \"Inventory Date\" allows for non-date values) because the source data can be inconsistent! The goal here is to import the data in any form. We will worry about cleaning this data in a subsequent step. \n",
+                "2. **tree:** This"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "47b9fa75-8bc4-4495-9669-84c723878058"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Export data from Excel to TSV** \n",
+                "\n",
+                "Next, extract the source data from Excel to a tab-separated values (TSV) text file. \n",
+                "\n",
+                "1. In the Excel data file, click **File \\> Save As...**\n",
+                "2. In the **Save as type** dropdown box, select **Text (tab delimited) (\\*.txt)** option.\n",
+                "3. Click **Save**.\n",
+                "\n",
+                "Write down the filepath where you saved the file.\n",
+                "\n",
+                "_Note:_ You cannot use CSV file format for this tree data, because the source data cells can contain commas. If you run into an issue using a tab-separated values file, you can export the data from Excel to a pipe-delimited file following [this tutorial](https://www.automateexcel.com/how-to/convert-save-as-pipe-delimited/).\n",
+                "\n",
+                "Each cell will be delimited by a tab, and each row will be delimited by a Windows-standard line break ('CRLF'). \n",
+                "\n",
+                "Examine the file in Notepad++ or a similar text editor. Verify that the first row is the header row (i.e. that it contains the column titles, \"Species DBH Condition for ISA value Urban Forestry Maintenance\" etc) and that the rest of the file looks to be complete.\n",
+                "\n",
+                "_Note:_ If the first row is not the header row, but instead starts immediately with the data, then do this: change the line \"FIRSTROW = 2\" below to \"FIRSTROW = 1\", or remove it."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "b5167fe5-ecb8-43db-81c4-83d8727511bd"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Import data into SQL Database**\n",
+                "\n",
+                "Replace the filepath in the code below, 'C:\\\\temp\\\\example\\_data.tsv', with the filepath where you saved the TSV file from the previous step."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "6234365a-24d7-4a52-9e2e-92a6c20d30c3"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "BULK INSERT TreeKeeper_Staging\r\n",
+                "FROM 'C:\\temp\\example_data.tsv'\r\n",
+                "WITH (\r\n",
+                "\tFIELDTERMINATOR = '\\t',\r\n",
+                "\tFIRSTROW = 2\r\n",
+                ")\r\n",
+                "GO"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "b6ccf231-97fe-4415-8681-c5df91cbf36e"
+            },
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "(31582 rows affected)"
+                    },
+                    "metadata": {}
+                },
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": "Total execution time: 00:00:01.702"
+                    },
+                    "metadata": {}
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "If the data operation completed successfully, you should see a note (xx rows affected). If you see errors, examine the line referenced by the error message and fix."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "c1eb1954-83d6-4034-9609-8ec0aa2b1480"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Examine data**\n",
+                "\n",
+                "Run the code below to display the data you just imported."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "bcb92ca7-1732-4fc3-8b72-adf7d032929d"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "SELECT *\r\n",
+                "FROM TreeKeeper_Staging\r\n",
+                ""
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "4e88602a-3ce0-4b2b-8ea8-9ecf8886ff2c",
+                "tags": []
+            },
+            "outputs": [],
+            "execution_count": null
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Step 2: Create more tables to handle the data**\n",
+                "\n",
+                "We will create the remainder of the tables:\n",
+                "\n",
+                "1. **KeyValue\\_LocType**: This table contains key-value pairs for the Location Type (\"Location Type for ISA Value\" column). We will use this table to make sure the imported data's location types match the expected data types (by using a foreign key constraint in the next table.) This constraint helps catch typos and ensure clean data.\n",
+                "2. **Trees:** This table is the main data table from which we will analyze trees. The table stores only the necessary columns and we will clean/validate the rows of the staging table before writing them to **Trees** table. \n",
+                "3. **TreeKeeper\\_Errors**: This table stores the errors that were found during validation of staging data. These rows need to be fixed/cleaned before they can be stored in **Trees**.\n",
+                "\n",
+                "   Run the code below to create these tables."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "621bdf9a-99eb-4db5-9866-a23c275c3421"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "USE Trees; -- this line ensures the program uses the database we've created\r\n",
+                "\r\n",
+                "-- Create table for the location types, mapped with key-value pairs in alphabetical order\r\n",
+                "DROP TABLE IF EXISTS KeyValue_LocType;\r\n",
+                "CREATE TABLE KeyValue_LocType (\r\n",
+                "  ID int NOT NULL,\r\n",
+                "  Value nvarchar(255),\r\n",
+                "  PRIMARY KEY (ID)\r\n",
+                ")\r\n",
+                "\r\n",
+                "-- Populate our known location types into the newly created table\r\n",
+                "INSERT INTO KeyValue_LocType ( ID, Value )\r\n",
+                "VALUES \r\n",
+                "  (1, 'Easement Tree'),\r\n",
+                "  (2, 'OtherCityProperty (Pol-Fir-PW-P&Scem-etc'),\r\n",
+                "  (3, 'Parkland/Golf Course'),\r\n",
+                "  (4, 'Street Tree (Boulevard)'),\r\n",
+                "  (5, 'Street Tree (Median)'),\r\n",
+                "  (6, 'Woodland/Natural Area')\r\n",
+                "\r\n",
+                "-- Create table for import source; this will be stored as metadata to track Trees row source\r\n",
+                "CREATE TABLE KeyValue_ImportSource (\r\n",
+                "  ID      SMALLINT NOT NULL,\r\n",
+                "  Value   NVARCHAR(255),\r\n",
+                "  PRIMARY KEY (ID)\r\n",
+                ")\r\n",
+                "-- Populate the table with import source values\r\n",
+                "INSERT INTO KeyValue_ImportSource\r\n",
+                "VALUES\r\n",
+                "    (1,'Flat File'),\r\n",
+                "    (2,'Error Table'),\r\n",
+                "    (3,'Manual Entry')\r\n",
+                "\r\n",
+                "-- Create a table for tree data. We will move the imported data from TreeKeeper_Staging to the Trees table.\r\n",
+                "--      The Trees table will be lighter and cleaner, which will make for better performance and usability.  \r\n",
+                "CREATE TABLE [dbo].[Trees] (\r\n",
+                "    PK                        INT IDENTITY(1,1),\r\n",
+                "    [SiteID]                  INT NOT NULL,\r\n",
+                "    [LocTypeID]               INT NOT NULL,\r\n",
+                "    [X-Coord]                 FLOAT NOT NULL,\r\n",
+                "    [Y-Coord]                 FLOAT NOT NULL,\r\n",
+                "    [Species]                 NVARCHAR(255) NULL,\r\n",
+                "    [ChangeDate]              DATE NULL,\r\n",
+                "    [PlantingProjectYear]     INT NULL,\r\n",
+                "    [MetaData_ImportDateTime] DATETIME NOT NULL,\r\n",
+                "    [MetaData_ImportSource]   SMALLINT NOT NULL,\r\n",
+                "    CONSTRAINT [PK_Trees] PRIMARY KEY CLUSTERED (PK ASC),\r\n",
+                "    CONSTRAINT [FK_Trees_KeyValue_LocType] FOREIGN KEY ([LocTypeID]) REFERENCES [dbo].[KeyValue_LocType] ([ID]),\r\n",
+                "    CONSTRAINT [FK_Trees_KeyValue_ImportSource] FOREIGN KEY ([MetaData_ImportSource]) REFERENCES [dbo].[KeyValue_ImportSource] ([ID])\r\n",
+                ");\r\n",
+                "\r\n",
+                "\r\n",
+                "-- Create a table for rows in the staging table that contain validation errors. We can save\r\n",
+                "--      these for our review. Once the errors are fixed, then they can be inserted into the main Trees table.\r\n",
+                "CREATE TABLE [dbo].[TreeKeeper_Errors] (\r\n",
+                "    PK                        INT IDENTITY(1,1),\r\n",
+                "    [SiteID]                  INT NOT NULL,\r\n",
+                "    [LocTypeValue]            NVARCHAR(MAX) NULL,\r\n",
+                "    [X-Coord]                 FLOAT NULL,\r\n",
+                "    [Y-Coord]                 FLOAT NULL,\r\n",
+                "    [Species]                 NVARCHAR(MAX) NULL,\r\n",
+                "    [ChangeDate]              DATE NULL,\r\n",
+                "    [PlantingProjectValue]    NVARCHAR(MAX) NULL,\r\n",
+                "    [MetaData_ImportDateTime] DATETIME NOT NULL,\r\n",
+                "    [MetaData_ImportSource]   SMALLINT NOT NULL\r\n",
+                "    CONSTRAINT [PK_TreeKeeper_Errors] PRIMARY KEY CLUSTERED (PK ASC),\r\n",
+                ");\r\n",
+                "\r\n",
+                ""
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "4bcfb90f-7639-4e9e-8395-36b488db7354"
+            },
+            "outputs": [],
+            "execution_count": null
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "Next, we move all valid/clean rows from the staging table into the **Trees** table; any rows with invalid data are inserted into the TreeKeeper\\_Errors table for later review."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "4cf0e314-523f-498d-a7d8-ef098c8e9dc9"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "-- Insert the valid data into Trees\r\n",
+                "INSERT INTO Trees.dbo.Trees ( [SiteID], [LocTypeID], [X-Coord], [Y-Coord], [Species], [ChangeDate], [PlantingProjectYear], [MetaData_ImportDateTime], [MetaData_ImportSource] )\r\n",
+                "SELECT [Site ID],\r\n",
+                "    KeyValue_LocType.ID, \r\n",
+                "    [X-Coord],\r\n",
+                "    [Y-Coord],\r\n",
+                "    [Species],\r\n",
+                "    [Change Date],\r\n",
+                "    CASE WHEN ISNUMERIC(SUBSTRING(TreeKeeper_Staging.[Planting Project],1,4))=1 \r\n",
+                "      THEN SUBSTRING(TreeKeeper_Staging.[Planting Project],1,4) \r\n",
+                "      ELSE '0' END AS PlantingProjectYear,\r\n",
+                "    GETDATE(),\r\n",
+                "    '1' -- Source: Flat File\r\n",
+                "FROM TreeKeeper_Staging \r\n",
+                "  INNER JOIN KeyValue_LocType\r\n",
+                "    ON KeyValue_LocType.Value = TreeKeeper_Staging.[Location Type for ISA value]\r\n",
+                "WHERE [Location Type for ISA value] IN ( \r\n",
+                "    SELECT [KeyValue_LocType].Value\r\n",
+                "    FROM KeyValue_LocType )\r\n",
+                "  AND [X-Coord] IS NOT NULL\r\n",
+                "  AND [Y-Coord] IS NOT NULL\r\n",
+                "  AND LEN(Species)<=255\r\n",
+                "\r\n",
+                "-- Insert the invalid data into TreeKeeper_Errors\r\n",
+                "INSERT INTO TreeKeeper_Errors\r\n",
+                "SELECT \r\n",
+                " [Site ID], \r\n",
+                " [Location Type for ISA value], \r\n",
+                " [X-Coord], \r\n",
+                " [Y-Coord], \r\n",
+                " Species, \r\n",
+                " [Change Date], \r\n",
+                " [Planting Project], \r\n",
+                " GETDATE(),\r\n",
+                " '1' -- Source: Flat File\r\n",
+                " from Treekeeper_Staging\r\n",
+                " WHERE [Location Type for ISA value] NOT IN ( \r\n",
+                "      SELECT [KeyValue_LocType].Value\r\n",
+                "      FROM KeyValue_LocType\r\n",
+                "  )\r\n",
+                "  OR [X-Coord] IS NULL\r\n",
+                "  OR [Y-Coord] IS NULL\r\n",
+                "  OR LEN(Species)>255"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "3b62599d-09be-43cb-bed5-4e88b119b299"
+            },
+            "outputs": [],
+            "execution_count": null
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "Next, work with your DBA to work through any errors in the table TreeKeeper\\_Errors. Once the data integrity issues have been fixed, use the code below to add these columns to the Trees table.\n",
+                "\n",
+                "If there were no errors found, skip this step."
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "fb65bf2f-e193-4967-a2eb-9f327a56574d"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "-- Once errored data has been cleaned up, use this code to move rows from Errors table to main Trees table\r\n",
+                "INSERT INTO Trees.dbo.Trees ( [SiteID], [LocTypeID], [X-Coord], [Y-Coord], [Species], [ChangeDate], [PlantingProjectYear], [MetaData_ImportDateTime], [MetaData_ImportSource] )\r\n",
+                "SELECT [SiteID],\r\n",
+                "    KeyValue_LocType.ID, \r\n",
+                "    [X-Coord],\r\n",
+                "    [Y-Coord],\r\n",
+                "    [Species],\r\n",
+                "    [ChangeDate],\r\n",
+                "    CASE WHEN ISNUMERIC(SUBSTRING(TreeKeeper_Errors.[PlantingProjectValue],1,4))=1 \r\n",
+                "      THEN SUBSTRING(TreeKeeper_Errors.[PlantingProjectValue],1,4) \r\n",
+                "      ELSE '0' END AS PlantingProjectYear,\r\n",
+                "    GETDATE(),\r\n",
+                "    '2' -- Source = Error Table\r\n",
+                "FROM TreeKeeper_Errors \r\n",
+                "  INNER JOIN KeyValue_LocType\r\n",
+                "    ON KeyValue_LocType.Value = TreeKeeper_Errors.[LocTypeValue]\r\n",
+                "WHERE [LocTypeValue] IN ( \r\n",
+                "    SELECT [KeyValue_LocType].Value\r\n",
+                "    FROM KeyValue_LocType )\r\n",
+                "  AND [X-Coord] IS NOT NULL\r\n",
+                "  AND [Y-Coord] IS NOT NULL\r\n",
+                "  AND LEN(Species)<=255"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "c2ca2938-1b68-4e8c-8d34-2f99415113ce"
+            },
+            "outputs": [],
+            "execution_count": null
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "Finally, you can report on your data! Here are useful reports.\n",
+                "\n",
+                "**Report #1 - Replica of \"Final Data\" sheet in Ella's Excel document**"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "ca5fba98-8a64-458f-a5f0-365c44453f47"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "--Report #1: Produces a replica of \"Final Data\" sheet in Excel doc\r\n",
+                "USE Trees\r\n",
+                "GO\r\n",
+                "WITH tppView AS (\r\n",
+                "  SELECT [Site ID],\r\n",
+                "    [Location Type for ISA value], \r\n",
+                "    SUBSTRING(TreeKeeper_Staging.[Planting Project],1,4) AS PlantingProjectYear,\r\n",
+                "    [X-Coord],\r\n",
+                "    [Y-Coord],\r\n",
+                "    [Species],\r\n",
+                "    [Change Date]\r\n",
+                "  FROM TreeKeeper_Staging\r\n",
+                "  WHERE [Location Type for ISA value] = 'Street Tree (Boulevard)'\r\n",
+                "    OR [Location Type for ISA value] = 'Street Tree (Median)'\r\n",
+                "    OR [Location Type for ISA value] = 'Easement Tree'\r\n",
+                "    OR [Location Type for ISA value] = 'OtherCityProperty (Pol-Fir-PW-P&Scem-etc' ), \r\n",
+                "tppCount AS (\r\n",
+                "  SELECT TreeKeeper_Staging.[Site ID] as 'Site ID',\r\n",
+                "    COUNT(DISTINCT SUBSTRING(TreeKeeper_Staging.[Planting Project],1,4)) as 'Planting Project'\r\n",
+                "  FROM TreeKeeper_Staging\r\n",
+                "  GROUP BY TreeKeeper_Staging.[Site ID]\r\n",
+                ")\r\n",
+                "\r\n",
+                "SELECT tppView.[Site ID],\r\n",
+                "  MAX(CASE WHEN ISNUMERIC(tppView.PlantingProjectYear) = 1 THEN 0 ELSE 1 END) AS [0000],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2011' THEN 1 ELSE 0 END) AS [2011],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2012' THEN 1 ELSE 0 END) AS [2012],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2013' THEN 1 ELSE 0 END) AS [2013],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2014' THEN 1 ELSE 0 END) AS [2014],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2015' THEN 1 ELSE 0 END) AS [2015],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2016' THEN 1 ELSE 0 END) AS [2016],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2017' THEN 1 ELSE 0 END) AS [2017],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2018' THEN 1 ELSE 0 END) AS [2018],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2019' THEN 1 ELSE 0 END) AS [2019],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2020' THEN 1 ELSE 0 END) AS [2020],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2021' THEN 1 ELSE 0 END) AS [2021],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2022' THEN 1 ELSE 0 END) AS [2022],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2023' THEN 1 ELSE 0 END) AS [2023],\r\n",
+                "  COUNT(DISTINCT tppView.PlantingProjectYear) AS [Grand Total]\r\n",
+                "FROM tppView\r\n",
+                "GROUP BY tppView.[Site ID],[X-Coord],[Y-Coord],[Location Type for ISA value]\r\n",
+                "ORDER BY [Site ID]"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "d9497e4d-6dd2-4f78-bde7-df47d8a84c51"
+            },
+            "outputs": [],
+            "execution_count": null
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Report #2 - Replica of \"Final Data\", but with additional columns**"
+            ],
+            "metadata": {
+                "azdata_cell_guid": "93ef602b-094f-415b-841a-6f0ceb982b8a"
+            },
+            "attachments": {}
+        },
+        {
+            "cell_type": "code",
+            "source": [
+                "-- Report #2: Produces a replica of Ella's \"Final Data\" sheet, with additional useful columns like X-coord and Y-coord\r\n",
+                "WITH tppView AS (\r\n",
+                "  SELECT [Site ID],\r\n",
+                "    [Location Type for ISA value], \r\n",
+                "    SUBSTRING(TreeKeeper_Staging.[Planting Project],1,4) AS PlantingProjectYear,\r\n",
+                "    [X-Coord],\r\n",
+                "    [Y-Coord],\r\n",
+                "    [Species],\r\n",
+                "    [Change Date]\r\n",
+                "  FROM TreeKeeper_Staging\r\n",
+                "  WHERE [Location Type for ISA value] = 'Street Tree (Boulevard)'\r\n",
+                "    OR [Location Type for ISA value] = 'Street Tree (Median)'\r\n",
+                "    OR [Location Type for ISA value] = 'Easement Tree'\r\n",
+                "    OR [Location Type for ISA value] = 'OtherCityProperty (Pol-Fir-PW-P&Scem-etc' ), \r\n",
+                "tppCount AS (\r\n",
+                "  SELECT TreeKeeper_Staging.[Site ID] as 'Site ID',\r\n",
+                "    COUNT(DISTINCT SUBSTRING(TreeKeeper_Staging.[Planting Project],1,4)) as 'Planting Project'\r\n",
+                "  FROM TreeKeeper_Staging\r\n",
+                "  GROUP BY TreeKeeper_Staging.[Site ID]\r\n",
+                ")\r\n",
+                "\r\n",
+                "SELECT tppView.[Site ID],\r\n",
+                "  MAX(CASE WHEN ISNUMERIC(tppView.PlantingProjectYear) = 1 THEN 0 ELSE 1 END) AS [0000],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2011' THEN 1 ELSE 0 END) AS [2011],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2012' THEN 1 ELSE 0 END) AS [2012],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2013' THEN 1 ELSE 0 END) AS [2013],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2014' THEN 1 ELSE 0 END) AS [2014],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2015' THEN 1 ELSE 0 END) AS [2015],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2016' THEN 1 ELSE 0 END) AS [2016],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2017' THEN 1 ELSE 0 END) AS [2017],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2018' THEN 1 ELSE 0 END) AS [2018],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2019' THEN 1 ELSE 0 END) AS [2019],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2020' THEN 1 ELSE 0 END) AS [2020],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2021' THEN 1 ELSE 0 END) AS [2021],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2022' THEN 1 ELSE 0 END) AS [2022],\r\n",
+                "  MAX(CASE WHEN tppView.PlantingProjectYear = '2023' THEN 1 ELSE 0 END) AS [2023],\r\n",
+                "  COUNT(DISTINCT tppView.PlantingProjectYear) AS [Grand Total],\r\n",
+                "  [Location Type for ISA value] AS LocType,\r\n",
+                "  [X-Coord],\r\n",
+                "  [Y-Coord],\r\n",
+                "  MIN([Change Date]) AS [EarliestChangeDate],\r\n",
+                "  MAX([Change Date]) AS [MostRecentChangeDate]\r\n",
+                "FROM tppView\r\n",
+                "GROUP BY tppView.[Site ID],[X-Coord],[Y-Coord],[Location Type for ISA value]"
+            ],
+            "metadata": {
+                "language": "sql",
+                "azdata_cell_guid": "ac5d25d7-ffaa-496f-ba23-f668faae8920",
+                "tags": []
+            },
+            "outputs": [],
+            "execution_count": null
+        },
+        {
+            "cell_type": "markdown",
+            "source": [
+                "**Next step for me:** ArcGIS import!"
+            ],
+            "metadata": {
+                "azdata_cell_guid": "c1c92281-87fe-45b7-a058-373e7a66a657"
+            },
+            "attachments": {}
+        }
+    ]
+}
